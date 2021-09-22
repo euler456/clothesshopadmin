@@ -13,25 +13,25 @@ import {   Form } from "react-bootstrap";
 
 
 function Product () {
-    const [hits, order] = useState([]);
+    const [hits, setHits] = useState([]);
     const [redirect, isnotlogin] = useState(false);
+  
     function handleupdate(event){
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/clothesshop/api/api.php?action=updatefood', {
+        fetch('http://localhost/clothesshop/api/api.php?action=updateproduct', {
           method: 'POST',
           credentials: 'include',
           body: data
           
         })   .then((headers) =>{
-          if(headers.status == 400) {
+          if(headers.status == 403) {
               console.log('updatefood failed');
               alert('You are not loggin');
               return;
           }
           if(headers.status == 201) {
               console.log('updatefood successful');
-              window.location.reload();
               return;
           }
       })
@@ -40,7 +40,7 @@ function Product () {
       function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/clothesshop/api/api.php?action=addfood', {
+        fetch('http://localhost/clothesshop/api/api.php?action=addproduct', {
           method: 'POST',
           credentials: 'include',
           body: data
@@ -63,7 +63,7 @@ function Product () {
       function fetchfooddelete(dd){
         console.log(dd);
         const fd = new FormData();
-        fd.append('F_ID', dd);
+        fd.append('productID', dd);
         console.log(fd);
        fetch('http://localhost/clothesshop/api/api.php?action=deleteFOOD', 
        {
@@ -85,7 +85,36 @@ function Product () {
        })
        .catch(function(error) {console.log(error)});
          }
-
+         useEffect(() => {
+            fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
+            {
+                    method: 'POST',
+                    credentials: 'include'
+                }
+                )    
+                .then(headers =>{
+                  if(headers.status == 403) {
+                      console.log('can not login');
+                      alert("plz login");
+                      this.setState({ isnotlogin: true });
+                      return;
+                  }
+               
+                  if(headers.status == 203) {
+                      console.log('login already ');
+                      this.setState({ isnotlogin: false });
+                      return;
+                  }
+              })
+              .catch(function(error) {console.log(error)});
+            fetch('http://localhost/clothesshop/api/api.php?action=displayproduct',
+            {
+                    method: 'POST',
+                    credentials: 'include'
+                }
+                )   .then(response => response.json())
+                .then(data =>setHits(data ));
+          },[]);
     if(isnotlogin){
           return (
             <body>
@@ -100,13 +129,13 @@ function Product () {
             <tbody id="orderform">
                   {hits.map(hit =>(
             <tr>
-            <td class='fd-id'>{hit.F_ID}</td>
-            <td class='fd-name'>{hit.foodname}</td>
+                  <td class='fd-ID'>{hit.productID}</td>
+            <td class='fd-name'>{hit.productname}</td>
             <td ><img src={require(`./pic/${hit.image}.jpg`).default}></img></td>
             <td class='price'>{hit.price}</td>
-            <td>{hit.options}</td>
+            <td>{hit.types}</td>
             <td><Button variant="contained" color="primary"
-        style={{ display: 'inline-block' }} type="submit" name="delete" value="delete"  onClick={fetchfooddelete(`${hit.F_ID}`)}>Delete</Button></td>
+        style={{ display: 'inline-block' }} type="submit" name="delete" value="delete" onClick={fetchfooddelete(`${hit.productID}`)} >Delete</Button></td>
             </tr> ) )}
             </tbody>
         </table>
@@ -114,30 +143,25 @@ function Product () {
       
        <Formik
       initialValues={{
-        foodname: '',
+        productname: '',
         price: '',
-        description:'',
-        options:'',
+        types:'',
         image:''
     }}
    
       validationSchema={Yup.object().shape({
-        foodname: Yup.string()
-        .matches(/^[A-Za-z ]*$/, 'Please enter valid foodname')
+        productname: Yup.string()
+        .matches(/^[A-Za-z ]*$/, 'Please enter valid productname')
         .max(40)
-        .required('foodname is required'),
+        .required('productname is required'),
         price: Yup.string()
         .max(10)
         .matches( /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, 'Please enter valid price')
         .required('price is required'),
-        description: Yup.string()
+        types: Yup.string()
         .max(10)
-        .matches(/^[A-Za-z ]*$/, 'Please enter valid description')
-        .required('description is required'),
-        options: Yup.string()
-        .max(10)
-        .matches( /^[A-Za-z ]*$/, 'Please enter valid options')
-        .required('options is required')
+        .matches( /^[A-Za-z ]*$/, 'Please enter valid types')
+        .required('types is required')
         ,  image: Yup.string()
         .max(20)
         .required('image is required')
@@ -145,33 +169,29 @@ function Product () {
   render={({ errors, touched }) => (
       <Form onSubmit={handleSubmit}>
           <div className="form-group">
-              <label htmlFor="foodname">foodname</label>
-              <Field name="foodname" id="foodname"   type="text" className={'form-control' + (errors.foodname && touched.foodname ? ' is-invalid' : '')} />
-              <ErrorMessage name="foodname" component="div" className="invalid-feedback" />
+              <label htmlFor="productname">productname</label>
+              <Field name="productname" id="productname"   type="text" className={'form-control' + (errors.productname && touched.productname ? ' is-invalid' : '')} />
+              <ErrorMessage name="productname" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
               <label htmlFor="price">price</label>
               <Field name="price" id="price" type="number" min="0" className={'form-control' + (errors.price && touched.price ? ' is-invalid' : '')} />
               <ErrorMessage name="price" component="div" className="invalid-feedback" />
           </div>
+          
           <div className="form-group">
-              <label htmlFor="description">description</label>
-              <Field name="description" id="description" type="text"  className={'form-control' + (errors.description && touched.description ? ' is-invalid' : '')} />
-              <ErrorMessage name="description" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
-              <label htmlFor="options">options</label>
-              <Field name="options" id="options" type="text"  className={'form-control' + (errors.options && touched.options ? ' is-invalid' : '')} />
-              <ErrorMessage name="options" component="div" className="invalid-feedback" />
+              <label htmlFor="types">types</label>
+              <Field name="types" id="types" type="text"  className={'form-control' + (errors.types && touched.types ? ' is-invalid' : '')} />
+              <ErrorMessage name="types" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
               <label htmlFor="image">image</label>
-              <Field name="image" value="gruel" id="image" type="text"  className={'form-control' + (errors.image && touched.image ? ' is-invalid' : '')} />
+              <Field name="image" value="Tshirt" id="image" type="text"  className={'form-control' + (errors.image && touched.image ? ' is-invalid' : '')} />
               <ErrorMessage name="image" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
           <Button type="submit" variant="contained" color="primary" 
-        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Add food</Button>
+        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Add</Button>
           </div>
       </Form>
   )}
@@ -179,20 +199,19 @@ function Product () {
 
 <Formik
       initialValues={{
-        F_ID:'',
-        foodname: '',
+        productID:'',
+        productname: '',
         price: '',
-        description:'',
-        options:'',
+        types:'',
         image:''
     }}
    
       validationSchema={Yup.object().shape({
-        foodname: Yup.string()
-        .matches(/^[A-Za-z ]*$/, 'Please enter valid foodname')
+        productname: Yup.string()
+        .matches(/^[A-Za-z ]*$/, 'Please enter valid productname')
         .max(40)
-        .required('foodname is required'),
-        F_ID: Yup.string()
+        .required('productname is required'),
+        productID: Yup.string()
         .max(10)
         .matches( /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, 'Please enter valid foodID')
         .required('foodID is required'),
@@ -200,14 +219,10 @@ function Product () {
         .max(10)
         .matches( /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, 'Please enter valid price')
         .required('price is required'),
-        description: Yup.string()
+        types: Yup.string()
         .max(10)
-        .matches(/^[A-Za-z ]*$/, 'Please enter valid description')
-        .required('description is required'),
-        options: Yup.string()
-        .max(10)
-        .matches( /^[A-Za-z ]*$/, 'Please enter valid options')
-        .required('options is required')
+        .matches( /^[A-Za-z ]*$/, 'Please enter valid types')
+        .required('types is required')
         ,  image: Yup.string()
         .max(20)
         .required('image is required')
@@ -215,14 +230,14 @@ function Product () {
   render={({ errors, touched }) => (
       <Form onSubmit={handleupdate}>
           <div className="form-group">
-              <label htmlFor="">F_ID</label>
-              <Field name="F_ID" id="F_ID2" type="number" min="0" className={'form-control' + (errors.F_ID && touched.F_ID ? ' is-invalid' : '')} />
-              <ErrorMessage name="F_ID" component="div" className="invalid-feedback" />
+              <label htmlFor="">productID</label>
+              <Field name="productID" id="productID2" type="number" min="0" className={'form-control' + (errors.productID && touched.productID ? ' is-invalid' : '')} />
+              <ErrorMessage name="productID" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
-              <label htmlFor="foodname">foodname</label>
-              <Field name="foodname" id="foodname2"   type="text" className={'form-control' + (errors.foodname && touched.foodname ? ' is-invalid' : '')} />
-              <ErrorMessage name="foodname" component="div" className="invalid-feedback" />
+              <label htmlFor="productname">productname</label>
+              <Field name="productname" id="productname2"   type="text" className={'form-control' + (errors.productname && touched.productname ? ' is-invalid' : '')} />
+              <ErrorMessage name="productname" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
               <label htmlFor="price">price</label>
@@ -230,23 +245,18 @@ function Product () {
               <ErrorMessage name="price" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
-              <label htmlFor="description">description</label>
-              <Field name="description" id="description2" type="text"  className={'form-control' + (errors.description && touched.description ? ' is-invalid' : '')} />
-              <ErrorMessage name="description" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
-              <label htmlFor="options">options</label>
-              <Field name="options" id="options2" type="text"  className={'form-control' + (errors.options && touched.options ? ' is-invalid' : '')} />
-              <ErrorMessage name="options" component="div" className="invalid-feedback" />
+              <label htmlFor="types">types</label>
+              <Field name="types" id="types2" type="text"  className={'form-control' + (errors.types && touched.types ? ' is-invalid' : '')} />
+              <ErrorMessage name="types" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
               <label htmlFor="image">image</label>
-              <Field value="gruel" name="image" id="image2" type="text"  className={'form-control' + (errors.image && touched.image ? ' is-invalid' : '')} />
+              <Field  name="image" id="image2" type="text"  className={'form-control' + (errors.image && touched.image ? ' is-invalid' : '')} />
               <ErrorMessage name="image" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
           <Button type="submit" variant="contained" color="primary" 
-        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Update food</Button>
+        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Update products</Button>
           </div>
       </Form>
   )}

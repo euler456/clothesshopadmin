@@ -182,34 +182,7 @@ class Home extends React.Component {
   
  
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
-    {
-            method: 'POST',
-            credentials: 'include'
-        }
-        )    
-        .then(headers =>{
-          if(headers.status == 403) {
-              console.log('can not login');
-              alert("plz login");
-              this.setState({ isnotlogin: true });
-              return;
-          }
-       
-          if(headers.status == 203) {
-              console.log('login already ');
-              this.setState({ isnotlogin: false });
-              return;
-          }
-      })
-      .catch(function(error) {console.log(error)});
-    fetch('http://localhost/clothesshop/api/api.php?action=displayfood',
-    {
-            method: 'POST',
-            credentials: 'include'
-        }
-        )   .then(response => response.json())
-        .then(data => this.setState({ hits: data }));
+
     }
   render() {
     return (<Product/>);
