@@ -83,3 +83,14 @@ input{
     margin: 0px;
  
   }
+#updateproduct{
+ float: left;
+ width: 30%;
+}
+#adminproductform{
+  float: left;
+  width: 60%;
+}
+#addproductform{
+  width: 60%;
+}

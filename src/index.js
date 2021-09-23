@@ -7,6 +7,8 @@ import * as Yup from 'yup';
 import Button from '@material-ui/core/Button';
 import { Form } from "react-bootstrap";
 import Product from "./products";
+import User from "./user";
+
 //import Redirect from 'react-router'
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
@@ -65,7 +67,7 @@ class Main extends React.Component {
         <ul id="header" class="row">
           <li><NavLink to="/" class="col">Login</NavLink></li>
           <li><NavLink to="/Home" class="col ">Products</NavLink></li>
-          <li><NavLink to="/User" class="col ">User</NavLink></li>
+          <li><NavLink to="/Userpage" class="col ">User</NavLink></li>
           <li><NavLink to="/order" class="col ">Order</NavLink></li>
           <li><NavLink to="/Setting" class="col ">Setting</NavLink></li>
           <li><NavLink to="/" class="col" onClick={this.Logout}>Logout</NavLink></li>
@@ -74,7 +76,7 @@ class Main extends React.Component {
         <div id="content">
            <Route exact path="/" component={Login}/>
            <Route exact path="/Home" component={Home}/>
-           <Route exact path="/User" component={User}/>
+           <Route exact path="/Userpage" component={Userpage}/>
            <Route path="/Sign" component={Sign}/>
            <Route path="/Setting" component={Setting}/>
            <Route path="/password" component={password}/>
@@ -179,15 +181,46 @@ class Login extends React.Component {
   }
 }
 class Home extends React.Component {
-  
+  constructor() {
+     super();
+  this.state = {
+    redirect: false,
+    isnotlogin:false
+  };
+}
  
   componentDidMount() {
-
+    fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
+    {
+            method: 'POST',
+            credentials: 'include'
+        }
+        )    
+        .then(headers => {
+          if(headers.status == 403) {
+              console.log('can not login');
+              alert("plz login");
+              this.setState({ isnotlogin: true });
+              return;
+          }
+       
+          if(headers.status == 203) {
+              console.log('isnotlogin');
+              this.setState({ isnotlogin: false });
+              return;
+          }
+      })
+      .catch(function(error) {console.log(error)});
     }
   render() {
+    const { isnotlogin } = this.state; 
+    if(!isnotlogin){
     return (<Product/>);
-  }
+  }else{
+  return <Redirect to='/' />}
 }
+}
+
 class Sign extends React.Component {
   constructor() {
     super();
@@ -386,11 +419,9 @@ class password extends React.Component {
 }
 
 
-class User extends React.Component {
+class Userpage extends React.Component {
   constructor(props) {
     super(props);
-    this.fetchuserdelete = this.fetchuserdelete.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
       hitss: [],
       redirect: false,
@@ -398,79 +429,7 @@ class User extends React.Component {
       order:[]
     };
   }
-  onChange(evt) {
-    this.setState({
-      value: evt.target.value.replace(/[^a-zA-Z]/g, '')
-    });
- };
-  handleupdate(event){
-    event.preventDefault();
-    const data = new FormData(event.target);
-    fetch('http://localhost/clothesshop/api/api.php?action=updateuser', {
-      method: 'POST',
-      credentials: 'include',
-      body: data
-      
-    })   .then((headers) =>{
-      if(headers.status == 400) {
-          console.log('updateuser failed');
-          alert('You are not loggin');
-          return;
-      }
-      if(headers.status == 201) {
-          console.log('updateuser successful');
-          window.location.reload();
-          return;
-      }
-  })
-  .catch(function(error) {console.log(error)});
-  }
-  handleSubmit(event) {
-    event.preventDefault();
-    const data = new FormData(event.target);
-    fetch('http://localhost/clothesshop/api/api.php?action=adduser', {
-      method: 'POST',
-      credentials: 'include',
-      body: data
-      
-    })   .then((headers) =>{
-      if(headers.status == 400) {
-          console.log('adduser failed');
-          alert('You are not loggin');
-          return;
-      }
-      if(headers.status == 201) {
-          console.log('adduser successful');
-          window.location.reload();
-          return;
-      }
-  })
-  .catch(function(error) {console.log(error)});
-  }
-  fetchuserdelete= (dd)=>{
-    console.log(dd);
-    const fd = new FormData();
-    fd.append('CustomerID', dd);
-    console.log(fd);
-   fetch('http://localhost/clothesshop/api/api.php?action=deleteuser', 
-   {
-       method: 'POST',
-       body: fd,
-       credentials: 'include'
-   })
-   .then(function(headers) {
-       if(headers.status == 400) {
-           console.log('can not delete');
-           return;
-       }
-       if(headers.status == 201) {
-           console.log('isnotlogin');
-           window.location.reload();
-           return;
-       }
-   })
-   .catch(function(error) {console.log(error)});
-     }
+  
   componentDidMount() {
     fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
     {
@@ -493,102 +452,13 @@ class User extends React.Component {
           }
       })
       .catch(function(error) {console.log(error)});
-    fetch('http://localhost/clothesshop/api/api.php?action=displayuser',
-    {
-            method: 'POST',
-            credentials: 'include'
-        }
-        )   .then(response => response.json())
-        .then(data => this.setState({ hitss: data }));
+   
     }
   render(){
     const { hitss } = this.state; 
     const { isnotlogin } = this.state; 
     if(!isnotlogin){
-          return (
-            <body>
-            <form>
-            <table>
-            <thead>
-                <th>CustomerID</th>
-                <th>name</th>
-                <th>email</th>
-                <th>phone</th>
-                <th>postcode</th>
-            </thead>
-            <tbody id="orderform">
-                  {hitss.map(hit =>(
-            <tr>
-            <td class='fd-id'>{hit.CustomerID}</td>
-            <td class='fd-name'>{hit.username}</td>
-            <td class='fd-email'>{hit.email}</td>
-            <td class='fd-phone'>{hit.phone}</td>
-            <td class='fd-postcode'>{hit.postcode}</td>
-            <td class='fd-usertype'>{hit.usertype}</td>
-            </tr> ) )}
-            </tbody>
-        </table>
-        </form>
-        <form  onSubmit={this.handleSubmit}>
-        <h4> Add User</h4>
-             <TextField type="text" name="username" maxlength="30"  onChange={this.onChange.bind(this)} value={this.state.value} id="regusername" 
-             variant="filled"
-             color="primary"   label="username"
-             style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-          
-              <TextField type="email" name="email"  id="regemail"  variant="filled"
-        color="primary"   label="email"
-        style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
-           
-              <TextField type="text" name="phone"  id="regphone" min="4000000000" max="4999999999" variant="filled"
-        color="primary"   label="phone"
-        style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
-            
-              <TextField type="number" name="postcode"  id="regpostcode" min="0" max="9999" variant="filled"
-        color="primary"   label="postcode"
-        style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
-            
-              <TextField type="password" name="password" placeholder="password" id="regpassword"  variant="filled"
-        color="primary"   label="password"
-        style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
-        
-              <TextField type="usertype" name="usertype"  id="usertype" variant="filled"  maxlength="30" 
-        color="primary"   label="usertype"
-        style={{ margin: 10 ,display: 'inline-block' }} required></TextField> 
-        <Button type="submit" variant="contained" color="primary">Add User</Button>
-       </form>
-       <form onSubmit={this.handleupdate}>
-       <h4> CustomerID</h4>
-       <h4> Update Customer</h4>
-       <TextField type="number" name="CustomerID" variant="filled" min="0"
-        color="primary"   label="CustomerID"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-             <TextField type="text" name="username"  onChange={this.onChange.bind(this)} value={this.state.value} id="regusername" variant="filled"
-        color="primary"   label="username"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-           
-              <TextField type="email" name="email"  id="regemail" variant="filled"
-        color="primary"   label="email"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-           
-              <TextField type="text" name="phone"  id="regphone" variant="filled" min="4000000000" max="4999999999"
-        color="primary"   label="phone"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-    
-              <TextField type="number" name="postcode"  id="regpostcode"  variant="filled" min="0" max="9999"
-        color="primary"   label="postcode"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-          
-              <TextField type="password" name="password" placeholder="password" id="regpassword"  variant="filled"
-        color="primary"   label="password"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-              <TextField type="usertype" name="usertype"  id="usertype" variant="filled"
-        color="primary"   label="usertype"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField> 
-        <Button type="submit" variant="contained" color="primary">Update User</Button>
-        </form>
-        </body>
-          )}
+          return <User/>}
           
             return <Redirect to='/'/>
           ;
