@@ -14,7 +14,6 @@ import {   Form } from "react-bootstrap";
 
 function Product () {
     const [hits, setHits] = useState([]);
-    const [redirect, isnotlogin] = useState(false);
   
     function handleupdate(event){
         event.preventDefault();

@@ -20,7 +20,7 @@ function User () {
           value: evt.target.value.replace(/[^a-zA-Z]/g, '')
         });
      };
-     function handleupdate(event){
+     function handleUpdate(event){
         event.preventDefault();
         const data = new FormData(event.target);
         fetch('http://localhost/clothesshop/api/api.php?action=updateuser', {
@@ -36,7 +36,7 @@ function User () {
           }
           if(headers.status == 201) {
               console.log('updateuser successful');
-              window.location.reload();
+    
               return;
           }
       })
@@ -45,7 +45,7 @@ function User () {
       function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/clothesshop/api/api.php?action=adduser', {
+        fetch('http://localhost/clothesshop/api/api.php?action=adminadduser', {
           method: 'POST',
           credentials: 'include',
           body: data
@@ -58,9 +58,13 @@ function User () {
           }
           if(headers.status == 201) {
               console.log('adduser successful');
-              window.location.reload();
+             
               return;
           }
+          if(headers.status == 418) {
+            console.log('username exist');
+            return;
+        }
       })
       .catch(function(error) {console.log(error)});
       }
@@ -102,11 +106,13 @@ function User () {
 
         <Formik
       initialValues={{
-        regusername:'',
+        username:'',
         email: '',
-        regphone: '',
+        CustomerID:'',
+        phone: '',
         types:'',
-        password:''
+        password:'',
+        usertypes:''
     }}
    
       validationSchema={Yup.object().shape({
@@ -114,18 +120,22 @@ function User () {
         .matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Please enter valid email')
         .max(40)
         .required('email is required'),
-        regusername: Yup.string()
+        username: Yup.string()
         .max(10)
         .matches( /^[A-Za-z ]*$/, 'Please enter valid username')
         .required('username is required'),
-        regphone: Yup.string()
+        CustomerID: Yup.string()
         .max(10)
-        .matches( /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, 'Please enter valid regphone')
-        .required('regphone is required'),
+        .matches( /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, 'Please enter valid CustomerID')
+        .required('CustomerID is required'),
+        phone: Yup.string()
+        .max(10)
+        .matches( /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, 'Please enter valid phone')
+        .required('phone is required'),
         postcode: Yup.string()
         .max(10)
-        .matches( /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, 'Please enter valid regphone')
-        .required('regphone is required')
+        .matches( /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, 'Please enter valid phone')
+        .required('phone is required')
         , 
         password: Yup.string()
         .max(20)
@@ -137,21 +147,26 @@ function User () {
         
   })}
   render={({ errors, touched }) => (
-      <Form onSubmit={handleSubmit} id="updateproduct">
-          <h2>Product update</h2>
+      <form onSubmit={handleUpdate} id="updateuser">
+          <h2>Update user</h2>
+          <div className="form-group">
+              <label htmlFor="">CustomerID</label>
+              <Field name="CustomerID" id="CustomerID" type="text" min="0" className={'form-control' + (errors.CustomerID && touched.CustomerID ? ' is-invalid' : '')} />
+              <ErrorMessage name="CustomerID" component="div" className="invalid-feedback" />
+          </div>
           <div className="form-group">
               <label htmlFor="">username</label>
-              <Field name="regusername" id="regusername" type="text" min="0" className={'form-control' + (errors.regusername && touched.regusername ? ' is-invalid' : '')} />
+              <Field name="username" id="regusername" type="text" min="0" className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
               <ErrorMessage name="username" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
               <label htmlFor="email">email</label>
-              <Field name="email" id="regemail2"   type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
+              <Field name="email" id="regemail"   type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
               <ErrorMessage name="email" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
-              <label htmlFor="regphone">phone</label>
-              <Field name="regphone" id="regphone2" type="number"  min="400000000" max="499999999" className={'form-control' + (errors.regphone && touched.regphone ? ' is-invalid' : '')} />
+              <label htmlFor="phone">phone</label>
+              <Field name="phone" id="regphone" type="number"  min="400000000" max="499999999" className={'form-control' + (errors.phone && touched.phone ? ' is-invalid' : '')} />
               <ErrorMessage name="phone" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
@@ -161,7 +176,7 @@ function User () {
           </div>
           <div className="form-group">
               <label htmlFor="password">password</label>
-              <Field  name="password" id="regpassword" type="text"  className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
+              <Field  name="password" id="password" type="text"  className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
               <ErrorMessage name="password" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
@@ -171,15 +186,89 @@ function User () {
           </div>
           <div className="form-group">
           <Button type="submit" variant="contained" color="primary" 
-        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Update products</Button>
+        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>update</Button>
+          </div>
+      </form>
+  )}
+/>
+
+<Formik
+      initialValues={{
+        username:'',
+        email: '',
+        phone: '',
+        types:'',
+        password:''
+    }}
+   
+      validationSchema={Yup.object().shape({
+        email: Yup.string()
+        .matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Please enter valid email')
+        .max(40)
+        .required('email is required'),
+        username: Yup.string()
+        .max(10)
+        .matches( /^[A-Za-z ]*$/, 'Please enter valid username')
+        .required('username is required'),
+        phone: Yup.string()
+        .max(10)
+        .matches( /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, 'Please enter valid phone')
+        .required('phone is required'),
+        postcode: Yup.string()
+        .max(10)
+        .matches( /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, 'Please enter valid phone')
+        .required('phone is required')
+        , 
+        password: Yup.string()
+        .max(20)
+        .required('password is required'),
+        usertypes: Yup.string()
+        .max(10)
+        .matches( /^[A-Za-z ]*$/, 'Please enter valid types')
+        .required('types is required')
+        
+  })}
+  render={({ errors, touched }) => (
+      <Form onSubmit={handleSubmit} id="updateuser">
+          <h2>Add user</h2>
+          <div className="form-group">
+              <label htmlFor="">username</label>
+              <Field name="username" id="username" type="text" min="0" className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
+              <ErrorMessage name="username" component="div" className="invalid-feedback" />
+          </div>
+          <div className="form-group">
+              <label htmlFor="email">email</label>
+              <Field name="email" id="email"   type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
+              <ErrorMessage name="email" component="div" className="invalid-feedback" />
+          </div>
+          <div className="form-group">
+              <label htmlFor="phone">phone</label>
+              <Field name="phone" id="phone" type="number"  min="400000000" max="499999999" className={'form-control' + (errors.phone && touched.phone ? ' is-invalid' : '')} />
+              <ErrorMessage name="phone" component="div" className="invalid-feedback" />
+          </div>
+          <div className="form-group">
+              <label htmlFor="postcode">postcode</label>
+              <Field name="postcode" id="postcode" type="text"  className={'form-control' + (errors.postcode && touched.postcode ? ' is-invalid' : '')} />
+              <ErrorMessage name="postcode" component="div" className="invalid-feedback" />
+          </div>
+          <div className="form-group">
+              <label htmlFor="password">password</label>
+              <Field  name="password" id="password" type="text"  className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
+              <ErrorMessage name="password" component="div" className="invalid-feedback" />
+          </div>
+          <div className="form-group">
+              <label htmlFor="usertypes">usertypes</label>
+              <Field  name="usertypes" id="usertypes" type="text"  className={'form-control' + (errors.usertypes && touched.usertypes ? ' is-invalid' : '')} />
+              <ErrorMessage name="usertypes" component="div" className="invalid-feedback" />
+          </div>
+          <div className="form-group">
+          <Button type="submit" variant="contained" color="primary" 
+        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>add user</Button>
           </div>
       </Form>
   )}
 />
-
-
-       <form onSubmit={handleupdate}>
-       <h4> CustomerID</h4>
+<form onSubmit={handleUpdate}>
        <h4> Update Customer</h4>
        <TextField type="number" name="CustomerID" variant="filled" min="0"
         color="primary"   label="CustomerID"
@@ -208,6 +297,7 @@ function User () {
         style={{ margin: 10 ,display: 'inline-block' }}  required></TextField> 
         <Button type="submit" variant="contained" color="primary">Update User</Button>
         </form>
+       
         </body>
 
           )

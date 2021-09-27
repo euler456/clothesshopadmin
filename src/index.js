@@ -423,10 +423,8 @@ class Userpage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hitss: [],
       redirect: false,
       isnotlogin:false,
-      order:[]
     };
   }
   
@@ -455,7 +453,6 @@ class Userpage extends React.Component {
    
     }
   render(){
-    const { hitss } = this.state; 
     const { isnotlogin } = this.state; 
     if(!isnotlogin){
           return <User/>}
