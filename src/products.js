@@ -110,7 +110,7 @@ function Product () {
                 <tr class="chartcontainer">
                   <td class='pdID'>{hit.productID}</td>
             <td class='fd-name'>{hit.productname}</td>
-            <td ><img src={require(`./pic/${hit.image}.jpg`).default}></img></td>
+            <td >{hit.image}</td>
             <td class='price'>{hit.price}</td>
             <td>{hit.types}</td>
             <td><Button variant="contained" color="primary"

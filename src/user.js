@@ -268,35 +268,6 @@ function User () {
       </Form>
   )}
 />
-<form onSubmit={handleUpdate}>
-       <h4> Update Customer</h4>
-       <TextField type="number" name="CustomerID" variant="filled" min="0"
-        color="primary"   label="CustomerID"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-             <TextField type="text" name="username"  id="regusername" variant="filled"
-        color="primary"   label="username"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-           
-              <TextField type="email" name="email"  id="regemail" variant="filled"
-        color="primary"   label="email"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-           
-              <TextField type="text" name="phone"  id="regphone" variant="filled" min="4000000000" max="4999999999"
-        color="primary"   label="phone"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-    
-              <TextField type="number" name="postcode"  id="regpostcode"  variant="filled" min="0" max="9999"
-        color="primary"   label="postcode"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-          
-              <TextField type="password" name="password" placeholder="password" id="regpassword"  variant="filled"
-        color="primary"   label="password"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField>
-              <TextField type="usertype" name="usertype"  id="usertype" variant="filled"
-        color="primary"   label="usertype"
-        style={{ margin: 10 ,display: 'inline-block' }}  required></TextField> 
-        <Button type="submit" variant="contained" color="primary">Update User</Button>
-        </form>
        
         </body>
 
