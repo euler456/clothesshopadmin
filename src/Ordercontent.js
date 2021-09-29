@@ -13,17 +13,16 @@ import {   Form } from "react-bootstrap";
 
 function Ordercontent () {
     const [hitss, setHitss] = useState([]);
-  
 
-     function handleUpdate(event){
+    function handleUpdate(event){
         event.preventDefault();
         const data = new FormData(event.target);
         fetch('http://localhost/clothesshop/api/api.php?action=updateuser', {
           method: 'POST',
           credentials: 'include',
           body: data
-          
-        })   .then((headers) =>{
+
+        }).then((headers) =>{
           if(headers.status == 400) {
               console.log('updateuser failed');
               alert('You are not loggin');
@@ -31,7 +30,6 @@ function Ordercontent () {
           }
           if(headers.status == 201) {
               console.log('updateuser successful');
-    
               return;
           }
       })

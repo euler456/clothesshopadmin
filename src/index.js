@@ -10,6 +10,7 @@ import Product from "./products";
 import User from "./user";
 import Order from "./order";
 import Ordercontent from "./Ordercontent";
+import Login from './login';
 //import Redirect from 'react-router'
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
@@ -92,50 +93,12 @@ class Main extends React.Component {
 class Login extends React.Component {
   constructor() {
     super();
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
       redirect: false
     };
     
   }
-  handleSubmit(event) {
-    event.preventDefault();
-    const data = new FormData(event.target);
-    fetch('http://localhost/clothesshop/api/api.php?action=adminlogin', {
-      method: 'POST',
-      credentials: 'include',
-      body: data
-      
-    }) .then((headers)=> {
-      if(headers.status == 401) {
-          console.log('login failed');
-          localStorage.removeItem('csrf');
-          localStorage.removeItem('username');
-          localStorage.removeItem('phone');
-          localStorage.removeItem('email');
-          localStorage.removeItem('postcode');
-          localStorage.removeItem('CustomerID');
 
-          alert('Can not login')
-          return;
-      }
-      if(headers.status == 203) {
-          console.log('registration required');
-          // only need csrf
-      }
-      if(headers.status == 200) {
-        console.log('login successful');
-        this.setState({ redirect: true });
-
-        // only need csrf
-    }
-
-  
-  })
-  .catch(function(error) {
-      console.log(error)
-  });
-  }
   render() {
     const { redirect } = this.state;
     // const { redirectToReferrer } = this.state;
@@ -143,41 +106,7 @@ class Login extends React.Component {
        return <Redirect to='/Home'/>
      }
     return (
-      <Formik
-      initialValues={{
-        username: '',
-        password: ''
-    }}
-      validationSchema={Yup.object().shape({
-        username: Yup.string()
-        .matches(/^[A-Za-z ]*$/, 'Please enter valid name')
-        .max(40)
-        .required('username is required'),
-          password: Yup.string()
-          .required('Password is required')
-  })}
-  render={({ errors, touched }) => (
-      <Form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-              <label htmlFor="username">username</label>
-              <Field name="username" id="username"   type="text" className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
-              <ErrorMessage name="username" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <Field name="password" id="password" type="password"  className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
-              <ErrorMessage name="password" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
-          <Button type="submit" variant="contained" color="primary"
-        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>login</Button>
-            <Button type="submit" variant="contained" color="primary"
-        style={{ marginTop: 10,display: 'inline-block' }}>
-        <NavLink to="/Sign" id="Signup">Sign Up</NavLink> </Button>
-          </div>
-      </Form>
-  )}
-/>
+   
     );
   }
 }
