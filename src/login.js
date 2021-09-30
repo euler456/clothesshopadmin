@@ -9,7 +9,7 @@ import {   Form } from "react-bootstrap";
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
 
 
-function Login () {
+function Login (props) {
     function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
@@ -74,9 +74,7 @@ function Login () {
               <div className="form-group">
               <Button type="submit" variant="contained" color="primary"
             style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>login</Button>
-                <Button type="submit" variant="contained" color="primary"
-            style={{ marginTop: 10,display: 'inline-block' }}>
-            <NavLink to="/Sign" id="Signup">Sign Up</NavLink> </Button>
+              
               </div>
           </Form>
       )}

@@ -10,7 +10,7 @@ import Product from "./products";
 import User from "./user";
 import Order from "./order";
 import Ordercontent from "./Ordercontent";
-import Login from './login';
+import Login from './Login';
 //import Redirect from 'react-router'
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
@@ -24,6 +24,16 @@ import {
 } from "react-router-dom";
 const green = '#A3A492';
 const black = '#424242';
+
+class Loginin extends React.Component {
+ 
+
+  render() {
+
+    return (<Login/>);
+  }
+
+}
 
 
 class Main extends React.Component {
@@ -68,7 +78,7 @@ class Main extends React.Component {
       <HashRouter>
       <div class="container">
         <ul id="header" class="row">
-          <li><NavLink to="/" class="col text-center">Login</NavLink></li>
+      
           <li><NavLink to="/Home" class="col  text-center">Products</NavLink></li>
           <li><NavLink to="/Userpage" class="col text-center">User</NavLink></li>
           <li><NavLink to="/order" class="col text-center">Orders</NavLink></li>
@@ -76,7 +86,6 @@ class Main extends React.Component {
           <li><NavLink to="/" class="col text-center" onClick={this.Logout}>Logout</NavLink></li>
         </ul>
         <div id="content">
-           <Route exact path="/" component={Login}/>
            <Route exact path="/Home" component={Home}/>
            <Route exact path="/Userpage" component={Userpage}/>
            <Route path="/order" component={order}/>
@@ -90,26 +99,7 @@ class Main extends React.Component {
     );
   }
 }
-class Login extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      redirect: false
-    };
-    
-  }
 
-  render() {
-    const { redirect } = this.state;
-    // const { redirectToReferrer } = this.state;
-     if (redirect) {
-       return <Redirect to='/Home'/>
-     }
-    return (
-   
-    );
-  }
-}
 class Home extends React.Component {
   constructor() {
      super();
@@ -477,6 +467,6 @@ class ordercontent extends React.Component {
   }
 }
 const root = document.getElementById('root');
-ReactDOM.render(<BrowserRouter><Main/></BrowserRouter>,root);
+ReactDOM.render(<BrowserRouter><Loginin/></BrowserRouter>,root);
  
-export default Main;
+export default Loginin;
