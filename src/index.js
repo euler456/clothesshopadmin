@@ -26,79 +26,89 @@ const green = '#A3A492';
 const black = '#424242';
 
 class Loginin extends React.Component {
- 
-
-  render() {
-
-    return (<Login/>);
-  }
-
+  constructor() {
+    super();
+ this.state = {
+   redirect: false,
+   islogin:false
+ };
+ this.Logout = this.Logout.bind(this);
+} 
+  
+Logout=()=>{
+  fetch('http://localhost/clothesshop/api/api.php?action=adminlogout', 
+  {
+      method: 'GET',
+      credentials: 'include'
+  })
+  .then((headers) =>{
+      if(headers.status != 200) {
+          console.log('logout failed Server-Side, but make client login again');
+      }
+      else{
+      localStorage.removeItem('csrf');
+      localStorage.removeItem('username');
+      localStorage.removeItem('email');
+      localStorage.removeItem('phone');
+      localStorage.removeItem('postcode');
+      localStorage.removeItem('CustomerID');    
+      this.setState({ islogin: false });
+      alert("logout already");}
+      
+  })
+  .catch(function(error) {console.log(error)});
 }
-
-
-class Main extends React.Component {
-  constructor(props){
-    super(props);
-   // this.state = { color: green };
-   // this.changeColor = this.changeColor.bind(this);
-    this.Logout = this.Logout.bind(this);
-  }
- /* changeColor(){
-    const newColor = this.state.color == green ? black : green;
-    this.setState({ color: newColor })
-  }*/
-  //      <div style={{background: this.state.color}}>  <!-- <li class="col "> <button id="dark" class="btn btn-light" onClick={this.changeColor}>Darkmode</button></li>
-
-  Logout=()=>{
-    fetch('http://localhost/clothesshop/api/api.php?action=adminlogout', 
-    {
-        method: 'GET',
-        credentials: 'include'
-    })
-    .then((headers) =>{
-        if(headers.status != 200) {
-            console.log('logout failed Server-Side, but make client login again');
+componentDidMount() {
+  fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
+  {
+          method: 'POST',
+          credentials: 'include'
+      }
+      )    
+      .then(headers => {
+        if(headers.status == 403) {
+            this.setState({ islogin: false });
+            return;
         }
-        else{
-        localStorage.removeItem('csrf');
-        localStorage.removeItem('username');
-        localStorage.removeItem('email');
-        localStorage.removeItem('phone');
-        localStorage.removeItem('postcode');
-        localStorage.removeItem('CustomerID');    
-        alert("logout already");}
-        
+     
+        if(headers.status == 203) {
+            console.log('islogin');
+            this.setState({ islogin: true });
+            return;
+        }
     })
     .catch(function(error) {console.log(error)});
   }
-  render() {
-
+ render() {
+   const { islogin } = this.state; 
+   if(islogin){
     return (
-    
       <HashRouter>
       <div class="container">
         <ul id="header" class="row">
-      
-          <li><NavLink to="/Home" class="col  text-center">Products</NavLink></li>
+          <li><NavLink to="/" class="col  text-center">Products</NavLink></li>
           <li><NavLink to="/Userpage" class="col text-center">User</NavLink></li>
           <li><NavLink to="/order" class="col text-center">Orders</NavLink></li>
-          <li><NavLink to="/ordercontent" class="col text-center">Ordercontent</NavLink></li>
+          <li><NavLink to="/ordercontent" class="col text-center">Orderitems</NavLink></li>
           <li><NavLink to="/" class="col text-center" onClick={this.Logout}>Logout</NavLink></li>
         </ul>
         <div id="content">
-           <Route exact path="/Home" component={Home}/>
+           <Route exact path="/" component={Home}/>
            <Route exact path="/Userpage" component={Userpage}/>
            <Route path="/order" component={order}/>
            <Route path="/ordercontent" component={ordercontent}/>
            <Route path="/Sign" component={Sign}/>
         </div>
         </div>
-        
-        </HashRouter>
-     
-    );
-  }
+        </HashRouter>  );
+ }else{
+ return <Login/>
 }
+}
+
+}
+
+
 
 class Home extends React.Component {
   constructor() {

@@ -66,7 +66,7 @@ function Product () {
                     credentials: 'include'
                 }
                 )   .then(response => response.json())
-                .then(data =>setHits(data ));
+                .then(data =>setHits(data));
           },[]);
           $(document).on('click', '.delete', function(event) {
         
@@ -87,6 +87,7 @@ function Product () {
              
                 if(headers.status == 201) {
                     console.log('delete succussful');
+                    window.location.reload();
                     return;
                 }
                

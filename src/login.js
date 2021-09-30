@@ -1,6 +1,7 @@
 import "./index.css";
 import React, { useEffect, useState } from "react";
 import { Formik, Field,  ErrorMessage } from 'formik';
+import { Route, Redirect } from 'react-router'
 import * as Yup from 'yup';
 import Button from '@material-ui/core/Button';
 import {   Form } from "react-bootstrap";
@@ -9,7 +10,7 @@ import {   Form } from "react-bootstrap";
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
 
 
-function Login (props) {
+const Login = props=> {
     function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
@@ -36,8 +37,7 @@ function Login (props) {
           }
           if(headers.status == 200) {
             console.log('login successful');
-            props.history.push("/Home");
-    
+            window.location.reload();
             // only need csrf
         }
       })
