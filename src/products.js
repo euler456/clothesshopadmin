@@ -14,9 +14,11 @@ import {   Form } from "react-bootstrap";
 
 function Product () {
     const [hits, setHits] = useState([]);
-  
+    const [uppdata, setUppdata] = useState([]);
+    const [selected, setSelected] = useState();
     function handleupdate(event){
         event.preventDefault();
+       
         const data = new FormData(event.target);
         fetch('http://localhost/clothesshop/api/api.php?action=updateproduct', {
           method: 'POST',
@@ -58,7 +60,9 @@ function Product () {
       })
       .catch(function(error) {console.log(error)});
       }
- 
+      function handleChange(event)  {
+        setSelected(event.target.value);
+      };
          useEffect(() => {
             fetch('http://localhost/clothesshop/api/api.php?action=displayproduct',
             {
@@ -94,6 +98,21 @@ function Product () {
             })
             .catch(function(error) {console.log(error)});
             
+          })
+          $(document).on('click', '.update', function(event) {
+        
+            var productID = $(this).closest('.chartcontainer').find('.pdID').html();
+            var dd = new FormData();
+            dd.append('productID',productID );
+            fetch('http://localhost/clothesshop/api/api.php?action=displaysingleproduct',
+            {
+              method: 'POST',
+              body: dd,
+              credentials: 'include'
+                }
+                )   .then(response => response.json())
+                .then(data =>setUppdata(data));
+            
           });
           return (
             <body>
@@ -116,6 +135,8 @@ function Product () {
             <td>{hit.types}</td>
             <td><Button variant="contained" color="primary"
         style={{ display: 'inline-block' }} class="delete"   name="delete" value="delete" >Delete</Button></td>
+         <td><Button variant="contained" color="primary"
+        style={{ display: 'inline-block' }} class="update"   name="update" value="update" >update</Button></td>
             </tr> ) )}
             </tbody>
         </table>
@@ -153,15 +174,24 @@ function Product () {
   render={({ errors, touched }) => (
       <Form onSubmit={handleupdate} id="updateproduct">
           <h2>Product update</h2>
+          
           <div className="form-group">
-              <label htmlFor="">productID</label>
-              <Field name="productID" id="productID2" type="number" min="0" className={'form-control' + (errors.productID && touched.productID ? ' is-invalid' : '')} />
+          {uppdata.map(uppdat =>(
+                <tr>
+               <label htmlFor="">productID</label>
+              <input name="productID" id="productID2" type="number" min="0" value={uppdat.productID}  className={'form-control' + (errors.productID && touched.productID ? ' is-invalid' : '')} disabled="disabled"></input>
               <ErrorMessage name="productID" component="div" className="invalid-feedback" />
+            </tr> ) )}
+              
           </div>
           <div className="form-group">
+          {uppdata.map(uppdat =>(
+            <div>
               <label htmlFor="productname">productname</label>
-              <Field name="productname" id="productname2"   type="text" className={'form-control' + (errors.productname && touched.productname ? ' is-invalid' : '')} />
+              <input name="productname" id="productname2"   type="text" value={uppdat.productname} 
+              className={'form-control' + (errors.productname && touched.productname ? ' is-invalid' : '')}  onChange={handleChange} />
               <ErrorMessage name="productname" component="div" className="invalid-feedback" />
+              </div> ) )}
           </div>
           <div className="form-group">
               <label htmlFor="price">price</label>
@@ -182,6 +212,7 @@ function Product () {
           <Button type="submit" variant="contained" color="primary" 
         style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Update products</Button>
           </div>
+          
       </Form>
   )}
 />
