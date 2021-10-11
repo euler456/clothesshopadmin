@@ -1,12 +1,16 @@
 
 import $ from "jquery"
 import "./index.css";
-import React, { useEffect, useState } from "react";
-
+import React, { useState,useEffect, Fragment } from "react";
 import { Formik, Field,  ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Button from '@material-ui/core/Button';
 import {   Form } from "react-bootstrap";
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@mui/icons-material/Close';
 //import Redirect from 'react-router'
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
@@ -15,7 +19,10 @@ import {   Form } from "react-bootstrap";
 function Product () {
     const [hits, setHits] = useState([]);
     const [uppdata, setUppdata] = useState([]);
-    const [selected, setSelected] = useState();
+    const [open, setOpen] = useState(true);
+
+   
+   
     function handleupdate(event){
         event.preventDefault();
        
@@ -33,11 +40,44 @@ function Product () {
           }
           if(headers.status == 201) {
               console.log('updatefood successful');
+              alert("update successful");
+              window.location.reload();
               return;
           }
       })
       .catch(function(error) {console.log(error)});
       }
+      // 
+     // 
+      $(document).on('click', '.update', function(event) {
+        let pdid=document.getElementById("productID2");
+        if (!pdid) {
+        var productID = $(this).closest('.chartcontainer').find('.pdID').html();
+        var dd = new FormData();
+        dd.append('productID',productID );
+        fetch('http://localhost/clothesshop/api/api.php?action=displaysingleproduct',
+        {
+          method: 'POST',
+          body: dd,
+          credentials: 'include'
+            }
+            )   .then(response => response.json())
+            .then(data =>setUppdata(data))
+            .catch(function(error) {console.log(error)});
+          }
+        
+        else{
+          var productID = $(this).closest('.chartcontainer').find('.pdID').html();
+          localStorage.setItem('productID', productID);
+          window.location.reload();
+        }
+        
+      })
+        
+  
+    
+     
+    
       function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
@@ -60,10 +100,22 @@ function Product () {
       })
       .catch(function(error) {console.log(error)});
       }
-      function handleChange(event)  {
-        setSelected(event.target.value);
-      };
+    
          useEffect(() => {
+          let uplocal=localStorage.getItem('productID');
+          if(uplocal){
+            var dd = new FormData();
+          dd.append('productID',uplocal );
+          fetch('http://localhost/clothesshop/api/api.php?action=displaysingleproduct',
+          {
+            method: 'POST',
+            body: dd,
+            credentials: 'include'
+              }
+              )   .then(response => response.json())
+              .then(data =>setUppdata(data))
+              .catch(function(error) {console.log(error)});
+          }
             fetch('http://localhost/clothesshop/api/api.php?action=displayproduct',
             {
                     method: 'POST',
@@ -98,28 +150,48 @@ function Product () {
             })
             .catch(function(error) {console.log(error)});
             
-          })
-          $(document).on('click', '.update', function(event) {
+          }) 
+         
         
-            var productID = $(this).closest('.chartcontainer').find('.pdID').html();
-            var dd = new FormData();
-            dd.append('productID',productID );
-            fetch('http://localhost/clothesshop/api/api.php?action=displaysingleproduct',
-            {
-              method: 'POST',
-              body: dd,
-              credentials: 'include'
-                }
-                )   .then(response => response.json())
-                .then(data =>setUppdata(data));
-            
-          });
           return (
+            
             <body>
+              <Box sx={{ width: '100%' }}>
+      <Collapse in={open}>
+        <Alert
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+          Close me!
+        </Alert>
+      </Collapse>
+      <Button
+        disabled={open}
+        variant="outlined"
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        Re-open
+      </Button>
+    </Box>
             <form>
+
             <table id="adminproductform">
             <thead>
             <th>ID</th>
+          
                 <th>Name</th>
                 <th>image</th>
                 <th>Price</th>
@@ -134,15 +206,16 @@ function Product () {
             <td class='price'>{hit.price}</td>
             <td>{hit.types}</td>
             <td><Button variant="contained" color="primary"
-        style={{ display: 'inline-block' }} class="delete"   name="delete" value="delete" >Delete</Button></td>
+        style={{ display: 'inline-block' }} class="delete"   name="delete" defaultValue="delete" >Delete</Button></td>
          <td><Button variant="contained" color="primary"
-        style={{ display: 'inline-block' }} class="update"   name="update" value="update" >update</Button></td>
+        style={{ display: 'inline-block' }} class="update"   name="update" defaultValue="update"  >update</Button></td>
             </tr> ) )}
             </tbody>
         </table>
         </form>
+
         <Formik
-      initialValues={{
+      initialdefaultValues={{
         productID:'',
         productname: '',
         price: '',
@@ -172,48 +245,36 @@ function Product () {
         .required('image is required')
   })}
   render={({ errors, touched }) => (
-      <Form onSubmit={handleupdate} id="updateproduct">
+      <form onSubmit={handleupdate} id="updateproduct">
           <h2>Product update</h2>
           
           <div className="form-group">
           {uppdata.map(uppdat =>(
-                <tr>
+                <div>
                <label htmlFor="">productID</label>
-              <input name="productID" id="productID2" type="number" min="0" value={uppdat.productID}  className={'form-control' + (errors.productID && touched.productID ? ' is-invalid' : '')} disabled="disabled"></input>
+              <input name="productID" class="updateinput" id="productID2" type="number" min="0" defaultValue={uppdat.productID}   className={'form-control' + (errors.productID && touched.productID ? ' is-invalid' : '')} ></input>
               <ErrorMessage name="productID" component="div" className="invalid-feedback" />
-            </tr> ) )}
-              
-          </div>
-          <div className="form-group">
-          {uppdata.map(uppdat =>(
-            <div>
-              <label htmlFor="productname">productname</label>
-              <input name="productname" id="productname2"   type="text" value={uppdat.productname} 
-              className={'form-control' + (errors.productname && touched.productname ? ' is-invalid' : '')}  onChange={handleChange} />
-              <ErrorMessage name="productname" component="div" className="invalid-feedback" />
-              </div> ) )}
-          </div>
-          <div className="form-group">
-              <label htmlFor="price">price</label>
-              <Field name="price" id="price2" type="number" min="0" className={'form-control' + (errors.price && touched.price ? ' is-invalid' : '')} />
+             <label htmlFor="productname">productname</label>
+             <input name="productname"class="updateinput" id="productname"   type="text" defaultValue={uppdat.productname} 
+             className={'form-control' + (errors.productname && touched.productname ? ' is-invalid' : '')}  />
+             <ErrorMessage name="productname" component="div" className="invalid-feedback" />
+             <label htmlFor="price">price</label>
+              <input name="price" id="price2"class="updateinput" type="number" min="0" defaultValue= {uppdat.price}  
+              className={'form-control' + (errors.price && touched.price ? ' is-invalid' : '')} />
               <ErrorMessage name="price" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
               <label htmlFor="types">types</label>
-              <Field name="types" id="types2" type="text"  className={'form-control' + (errors.types && touched.types ? ' is-invalid' : '')} />
+              <input name="types" id="types2" class="updateinput"type="text" defaultValue={uppdat.types}  className={'form-control' + (errors.types && touched.types ? ' is-invalid' : '')} />
               <ErrorMessage name="types" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
               <label htmlFor="image">image</label>
-              <Field  name="image" id="image2" type="text"  className={'form-control' + (errors.image && touched.image ? ' is-invalid' : '')} />
+              <input  name="image" id="image2"class="updateinput" type="text" defaultValue={uppdat.image}   className={'form-control' + (errors.image && touched.image ? ' is-invalid' : '')} />
               <ErrorMessage name="image" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
-          <Button type="submit" variant="contained" color="primary" 
+              <Button type="submit" variant="contained" color="primary" 
         style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Update products</Button>
-          </div>
-          
-      </Form>
+             </div>
+            ) )}
+              
+          </div> 
+      </form>
   )}
 />
        <Formik
@@ -242,7 +303,7 @@ function Product () {
         .required('image is required')
   })}
   render={({ errors, touched }) => (
-      <Form onSubmit={handleSubmit} id="addproductform">
+      <form onSubmit={handleSubmit} id="addproductform">
           <h2>Add product</h2>
           <div className="form-group">
               <label htmlFor="productname">productname</label>
@@ -254,7 +315,6 @@ function Product () {
               <Field name="price" id="price" type="number" min="0" className={'form-control' + (errors.price && touched.price ? ' is-invalid' : '')} />
               <ErrorMessage name="price" component="div" className="invalid-feedback" />
           </div>
-          
           <div className="form-group">
               <label htmlFor="types">types</label>
               <Field name="types" id="types" type="text"  className={'form-control' + (errors.types && touched.types ? ' is-invalid' : '')} />
@@ -262,14 +322,14 @@ function Product () {
           </div>
           <div className="form-group">
               <label htmlFor="image">image</label>
-              <Field name="image" value="Tshirt" id="image" type="text"  className={'form-control' + (errors.image && touched.image ? ' is-invalid' : '')} />
+              <Field name="image" defaultValue="Tshirt" id="image" type="text"  className={'form-control' + (errors.image && touched.image ? ' is-invalid' : '')} />
               <ErrorMessage name="image" component="div" className="invalid-feedback" />
           </div>
           <div className="form-group">
           <Button type="submit" variant="contained" color="primary" 
         style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Add</Button>
           </div>
-      </Form>
+      </form>
   )}
 />
 
