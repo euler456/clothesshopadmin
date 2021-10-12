@@ -7,6 +7,11 @@ import { Formik, Field,  ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Button from '@material-ui/core/Button';
 import {   Form } from "react-bootstrap";
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@material-ui/icons/Close';
 //import Redirect from 'react-router'
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
@@ -14,7 +19,11 @@ import {   Form } from "react-bootstrap";
 
 function User () {
     const [hitss, setHitss] = useState([]);
-  
+    const [uppdata, setUppdata] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [pddelete, setDelete] = useState(false);
+    const [add, setAdd] = useState(false);
+
     function onChange(evt) {
         this.setState({
           value: evt.target.value.replace(/[^a-zA-Z]/g, '')
@@ -68,9 +77,63 @@ function User () {
       })
       .catch(function(error) {console.log(error)});
       }
-    
+       $(document).on('click', '.update', function(event) {
+        let pdid=document.getElementById("productID2");
+        if (!pdid) {
+        var productID = $(this).closest('.chartcontainer').find('.pdID').html();
+        var dd = new FormData();
+        dd.append('productID',productID );
+        fetch('http://localhost/clothesshop/api/api.php?action=displaysingleuser',
+        {
+          method: 'POST',
+          body: dd,
+          credentials: 'include'
+            }
+            )   .then(response => response.json())
+            .then(data =>setUppdata(data))
+            .catch(function(error) {console.log(error)});
+          }
+        
+        else{
+          var productID = $(this).closest('.chartcontainer').find('.pdID').html();
+          localStorage.setItem('productID', productID);
+          window.location.reload();
+        }
+        
+      })
  
          useEffect(() => {
+          let upop=localStorage.getItem('upop');
+          if(upop){
+          setOpen(true);
+          localStorage.removeItem("upop");
+          }
+          let deop=localStorage.getItem('deop');
+          if(deop){
+            setDelete(true);
+          localStorage.removeItem("deop");
+          }
+          let adpd=localStorage.getItem('adpd');
+          if(adpd){
+            setAdd(true);
+          localStorage.removeItem("adpd");
+          }
+          
+          let uplocal=localStorage.getItem('productID');
+          if(uplocal){
+            var dd = new FormData();
+          dd.append('productID',uplocal );
+          fetch('http://localhost/clothesshop/api/api.php?action=displaysingleuser',
+          {
+            method: 'POST',
+            body: dd,
+            credentials: 'include'
+              }
+              )   .then(response => response.json())
+              .then(data =>setUppdata(data))
+              .catch(function(error) {console.log(error)});
+          }
+        
             fetch('http://localhost/clothesshop/api/api.php?action=displayuser',
             {
                     method: 'POST',
@@ -81,6 +144,69 @@ function User () {
           },[]);
           return (
             <body>
+            <Box sx={{ width: '100%' }}>
+            <Collapse in={open}>
+              <Alert
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                sx={{ mb: 2 }}
+              >
+               Update successfull
+              </Alert>
+            </Collapse>
+            <Collapse in={add}>
+              <Alert
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setAdd(false);
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                sx={{ mb: 2 }}
+              >
+               added successfull
+              </Alert>
+            </Collapse>
+         
+          </Box>
+          <Box sx={{ width: '100%' }}>
+            <Collapse in={pddelete}>
+              <Alert severity="warning"
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setDelete(false);
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                sx={{ mb: 2 }}
+              >
+               delete successfull
+              </Alert>
+            </Collapse>
+          </Box>
+           
             <form>
             <table>
             <thead>
@@ -148,47 +274,40 @@ function User () {
   })}
   render={({ errors, touched }) => (
       <form onSubmit={handleUpdate} id="updateuser">
-          <h2>Update user</h2>
+         <h2>User update</h2>
           <div className="form-group">
-              <label htmlFor="">CustomerID</label>
-              <Field name="CustomerID" id="CustomerID" type="text" min="0" className={'form-control' + (errors.CustomerID && touched.CustomerID ? ' is-invalid' : '')} />
+          {uppdata.map(uppdat =>(
+                <div>
+               <label htmlFor="">CustomerID</label>
+              <input name="CustomerID" class="updateinput" id="CustomerID" type="number" min="0" defaultValue={uppdat.CustomerID}   className={'form-control' + (errors.CustomerID && touched.CustomerID ? ' is-invalid' : '')} ></input>
               <ErrorMessage name="CustomerID" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
-              <label htmlFor="">username</label>
-              <Field name="username" id="regusername" type="text" min="0" className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
-              <ErrorMessage name="username" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
-              <label htmlFor="email">email</label>
-              <Field name="email" id="regemail"   type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
+             <label htmlFor="username">username</label>
+             <input name="username"class="updateinput" id="username"   type="text" defaultValue={uppdat.username} 
+             className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')}  />
+             <ErrorMessage name="username" component="div" className="invalid-feedback" />
+             <label htmlFor="email">email</label>
+              <input name="email" id="email"class="updateinput" type="text" min="0" defaultValue= {uppdat.email}  
+              className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
               <ErrorMessage name="email" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
               <label htmlFor="phone">phone</label>
-              <Field name="phone" id="regphone" type="number"  min="400000000" max="499999999" className={'form-control' + (errors.phone && touched.phone ? ' is-invalid' : '')} />
-              <ErrorMessage name="phone" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
+              <input name="phone" id="phone" class="updateinput"type="text" defaultValue={uppdat.phone}  className={'form-control' + (errors.phone && touched.phone ? ' is-invalid' : '')} />
+              <ErrorMessage name="types" component="div" className="invalid-feedback" />
               <label htmlFor="postcode">postcode</label>
-              <Field name="postcode" id="regpostcode" type="text"  className={'form-control' + (errors.postcode && touched.postcode ? ' is-invalid' : '')} />
+              <input  name="postcode" id="postcode"class="updateinput" type="text" defaultValue={uppdat.postcode}   className={'form-control' + (errors.postcode && touched.postcode ? ' is-invalid' : '')} />
               <ErrorMessage name="postcode" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
               <label htmlFor="password">password</label>
-              <Field  name="password" id="password" type="text"  className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
+              <input  name="password" id="password"class="updateinput" type="text" defaultValue={uppdat.password}   className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
               <ErrorMessage name="password" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
-              <label htmlFor="usertypes">usertypes</label>
-              <Field  name="usertypes" id="usertypes" type="text"  className={'form-control' + (errors.usertypes && touched.usertypes ? ' is-invalid' : '')} />
+              <label htmlFor="password">password</label>
+              <input  name="usertypes" id="usertypes"class="updateinput" type="text" defaultValue={uppdat.usertypes}   className={'form-control' + (errors.usertypes && touched.usertypes ? ' is-invalid' : '')} />
               <ErrorMessage name="usertypes" component="div" className="invalid-feedback" />
-          </div>
-          <div className="form-group">
-          <Button type="submit" variant="contained" color="primary" 
-        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>update</Button>
-          </div>
+              <Button type="submit" variant="contained" color="primary" 
+        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Update user</Button>
+             </div>
+            ) )}
+          </div> 
       </form>
+     
   )}
 />
 

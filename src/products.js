@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from '@material-ui/icons/Close';
 //import Redirect from 'react-router'
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
@@ -19,10 +19,9 @@ import CloseIcon from '@mui/icons-material/Close';
 function Product () {
     const [hits, setHits] = useState([]);
     const [uppdata, setUppdata] = useState([]);
-    const [open, setOpen] = useState(true);
-
-   
-   
+    const [open, setOpen] = useState(false);
+    const [pddelete, setDelete] = useState(false);
+    const [add, setAdd] = useState(false);
     function handleupdate(event){
         event.preventDefault();
        
@@ -40,15 +39,14 @@ function Product () {
           }
           if(headers.status == 201) {
               console.log('updatefood successful');
-              alert("update successful");
+              localStorage.setItem('upop', '0');
               window.location.reload();
               return;
           }
       })
       .catch(function(error) {console.log(error)});
       }
-      // 
-     // 
+     
       $(document).on('click', '.update', function(event) {
         let pdid=document.getElementById("productID2");
         if (!pdid) {
@@ -94,6 +92,7 @@ function Product () {
           }
           if(headers.status == 201) {
               console.log('addfood successful');
+              localStorage.setItem('adpd', '0');
               window.location.reload();
               return;
           }
@@ -102,6 +101,22 @@ function Product () {
       }
     
          useEffect(() => {
+          let upop=localStorage.getItem('upop');
+          if(upop){
+          setOpen(true);
+          localStorage.removeItem("upop");
+          }
+          let deop=localStorage.getItem('deop');
+          if(deop){
+            setDelete(true);
+          localStorage.removeItem("deop");
+          }
+          let adpd=localStorage.getItem('adpd');
+          if(adpd){
+            setAdd(true);
+          localStorage.removeItem("adpd");
+          }
+          
           let uplocal=localStorage.getItem('productID');
           if(uplocal){
             var dd = new FormData();
@@ -143,6 +158,8 @@ function Product () {
              
                 if(headers.status == 201) {
                     console.log('delete succussful');
+                    localStorage.setItem('deop', '0');
+
                     window.location.reload();
                     return;
                 }
@@ -173,18 +190,50 @@ function Product () {
           }
           sx={{ mb: 2 }}
         >
-          Close me!
+         Update successfull
         </Alert>
       </Collapse>
-      <Button
-        disabled={open}
-        variant="outlined"
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        Re-open
-      </Button>
+      <Collapse in={add}>
+        <Alert
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setAdd(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+         added successfull
+        </Alert>
+      </Collapse>
+   
+    </Box>
+    <Box sx={{ width: '100%' }}>
+      <Collapse in={pddelete}>
+        <Alert severity="warning"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setDelete(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+         delete successfull
+        </Alert>
+      </Collapse>
     </Box>
             <form>
 
@@ -215,7 +264,7 @@ function Product () {
         </form>
 
         <Formik
-      initialdefaultValues={{
+      initialdeValues={{
         productID:'',
         productname: '',
         price: '',

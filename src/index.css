@@ -91,9 +91,16 @@ input{
  float: left;
  width: 30%;
 }
-#adminproductform{
+#updateuser{
+  float: left;
+  width: 30%;
+  margin-left:25px;
+  padding: 0%;
+}
+table{
   float: left;
   width: 60%;
+  margin-top: 10%;
 }
 #addproductform{
   width: 60%;
