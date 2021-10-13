@@ -159,7 +159,6 @@ function Product () {
                 if(headers.status == 201) {
                     console.log('delete succussful');
                     localStorage.setItem('deop', '0');
-
                     window.location.reload();
                     return;
                 }

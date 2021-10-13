@@ -1,8 +1,7 @@
 
 import $ from "jquery"
 import "./index.css";
-import React, { useEffect, useState } from "react";
-import TextField from '@material-ui/core/TextField';
+import React, { useState,useEffect, Fragment } from "react";
 import { Formik, Field,  ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Button from '@material-ui/core/Button';
@@ -40,12 +39,15 @@ function User () {
         })   .then((headers) =>{
           if(headers.status == 400) {
               console.log('updateuser failed');
-              alert('You are not loggin');
+              localStorage.setItem('deop', '0');
+  // window.location.reload();
               return;
           }
           if(headers.status == 201) {
+            alert("f");
               console.log('updateuser successful');
-    
+              localStorage.setItem('upop', '0');
+  // window.location.reload();
               return;
           }
       })
@@ -62,12 +64,12 @@ function User () {
         })   .then((headers) =>{
           if(headers.status == 403) {
               console.log('adduser failed');
-              alert('You are not loggin');
               return;
           }
           if(headers.status == 201) {
               console.log('adduser successful');
-             
+              localStorage.setItem('adpd', '0');
+  // window.location.reload();
               return;
           }
           if(headers.status == 418) {
@@ -78,11 +80,11 @@ function User () {
       .catch(function(error) {console.log(error)});
       }
        $(document).on('click', '.update', function(event) {
-        let pdid=document.getElementById("productID2");
-        if (!pdid) {
-        var productID = $(this).closest('.chartcontainer').find('.pdID').html();
+        let fdid=document.getElementById("CustomerID");
+        if (!fdid) {
+        var CustomerID = $(this).closest('.userform').find('.userid').html();
         var dd = new FormData();
-        dd.append('productID',productID );
+        dd.append('CustomerID',CustomerID );
         fetch('http://localhost/clothesshop/api/api.php?action=displaysingleuser',
         {
           method: 'POST',
@@ -95,8 +97,8 @@ function User () {
           }
         
         else{
-          var productID = $(this).closest('.chartcontainer').find('.pdID').html();
-          localStorage.setItem('productID', productID);
+          var CustomerID = $(this).closest('.userform').find('.userid').html();
+          localStorage.setItem('CustomerID', CustomerID);
           window.location.reload();
         }
         
@@ -119,10 +121,10 @@ function User () {
           localStorage.removeItem("adpd");
           }
           
-          let uplocal=localStorage.getItem('productID');
+          let uplocal=localStorage.getItem('CustomerID');
           if(uplocal){
             var dd = new FormData();
-          dd.append('productID',uplocal );
+          dd.append('CustomerID',uplocal );
           fetch('http://localhost/clothesshop/api/api.php?action=displaysingleuser',
           {
             method: 'POST',
@@ -202,7 +204,7 @@ function User () {
                 }
                 sx={{ mb: 2 }}
               >
-               delete successfull
+              update failed
               </Alert>
             </Collapse>
           </Box>
@@ -216,15 +218,17 @@ function User () {
                 <th>phone</th>
                 <th>postcode</th>
             </thead>
-            <tbody id="orderform">
+            <tbody >
                   {hitss.map(hit =>(
-            <tr>
-            <td class='fd-id'>{hit.CustomerID}</td>
+            <tr class="userform">
+            <td class='userid'>{hit.CustomerID}</td>
             <td class='fd-name'>{hit.username}</td>
             <td class='fd-email'>{hit.email}</td>
             <td class='fd-phone'>{hit.phone}</td>
             <td class='fd-postcode'>{hit.postcode}</td>
             <td class='fd-usertype'>{hit.usertype}</td>
+            <td><Button variant="contained" color="primary"
+        style={{ display: 'inline-block' }} class="update"   name="update" defaultValue="update"  >update</Button></td>
             </tr> ) )}
             </tbody>
         </table>
@@ -278,9 +282,11 @@ function User () {
           <div className="form-group">
           {uppdata.map(uppdat =>(
                 <div>
+                  <div>
                <label htmlFor="">CustomerID</label>
               <input name="CustomerID" class="updateinput" id="CustomerID" type="number" min="0" defaultValue={uppdat.CustomerID}   className={'form-control' + (errors.CustomerID && touched.CustomerID ? ' is-invalid' : '')} ></input>
               <ErrorMessage name="CustomerID" component="div" className="invalid-feedback" />
+              </div>
              <label htmlFor="username">username</label>
              <input name="username"class="updateinput" id="username"   type="text" defaultValue={uppdat.username} 
              className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')}  />
@@ -296,11 +302,9 @@ function User () {
               <input  name="postcode" id="postcode"class="updateinput" type="text" defaultValue={uppdat.postcode}   className={'form-control' + (errors.postcode && touched.postcode ? ' is-invalid' : '')} />
               <ErrorMessage name="postcode" component="div" className="invalid-feedback" />
               <label htmlFor="password">password</label>
-              <input  name="password" id="password"class="updateinput" type="text" defaultValue={uppdat.password}   className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
+              <input  name="password" id="password"class="updateinput" type="text"    className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
               <ErrorMessage name="password" component="div" className="invalid-feedback" />
-              <label htmlFor="password">password</label>
-              <input  name="usertypes" id="usertypes"class="updateinput" type="text" defaultValue={uppdat.usertypes}   className={'form-control' + (errors.usertypes && touched.usertypes ? ' is-invalid' : '')} />
-              <ErrorMessage name="usertypes" component="div" className="invalid-feedback" />
+             
               <Button type="submit" variant="contained" color="primary" 
         style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Update user</Button>
              </div>
