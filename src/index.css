@@ -110,3 +110,7 @@ table{
   margin: 0%;
   padding: 0%;
 }
+#orderitem{
+  display: inline-block;
+  width: 30%;
+}

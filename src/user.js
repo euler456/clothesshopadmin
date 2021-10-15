@@ -37,17 +37,17 @@ function User () {
           body: data
           
         })   .then((headers) =>{
-          if(headers.status == 400) {
+          if(headers.status == 403) {
               console.log('updateuser failed');
               localStorage.setItem('deop', '0');
-  // window.location.reload();
+   window.location.reload();
               return;
           }
           if(headers.status == 201) {
-            alert("f");
+          
               console.log('updateuser successful');
               localStorage.setItem('upop', '0');
-  // window.location.reload();
+  window.location.reload();
               return;
           }
       })
@@ -69,7 +69,7 @@ function User () {
           if(headers.status == 201) {
               console.log('adduser successful');
               localStorage.setItem('adpd', '0');
-  // window.location.reload();
+              window.location.reload();
               return;
           }
           if(headers.status == 418) {
@@ -320,7 +320,7 @@ function User () {
         username:'',
         email: '',
         phone: '',
-        types:'',
+        postcode:'',
         password:''
     }}
    
@@ -345,10 +345,7 @@ function User () {
         password: Yup.string()
         .max(20)
         .required('password is required'),
-        usertypes: Yup.string()
-        .max(10)
-        .matches( /^[A-Za-z ]*$/, 'Please enter valid types')
-        .required('types is required')
+      
         
   })}
   render={({ errors, touched }) => (
@@ -379,11 +376,7 @@ function User () {
               <Field  name="password" id="password" type="text"  className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
               <ErrorMessage name="password" component="div" className="invalid-feedback" />
           </div>
-          <div className="form-group">
-              <label htmlFor="usertypes">usertypes</label>
-              <Field  name="usertypes" id="usertypes" type="text"  className={'form-control' + (errors.usertypes && touched.usertypes ? ' is-invalid' : '')} />
-              <ErrorMessage name="usertypes" component="div" className="invalid-feedback" />
-          </div>
+         
           <div className="form-group">
           <Button type="submit" variant="contained" color="primary" 
         style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>add user</Button>

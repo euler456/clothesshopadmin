@@ -215,7 +215,7 @@ function Product () {
     </Box>
     <Box sx={{ width: '100%' }}>
       <Collapse in={pddelete}>
-        <Alert severity="warning"
+        <Alert 
           action={
             <IconButton
               aria-label="close"
