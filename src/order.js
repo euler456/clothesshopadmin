@@ -309,7 +309,7 @@ window.location.reload();
         
   })}
   render={({ errors, touched }) => (
-      <form onSubmit={handleUpdate} id="addorder">
+      <form onSubmit={handleUpdate}  id="updateproduct">
          <h2>Orderstatus update</h2>
           <div className="form-group">
           {uppdata.map(uppdat =>(

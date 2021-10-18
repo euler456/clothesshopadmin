@@ -60,7 +60,7 @@ const Login = props=> {
               .required('Password is required')
       })}
       render={({ errors, touched }) => (
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} id="loginform">
               <div className="form-group">
                   <label htmlFor="username">username</label>
                   <Field name="username" id="username"   type="text" className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />

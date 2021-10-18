@@ -33,16 +33,18 @@ input{
  }
  #header li {
     display: inline;
-    list-style-type: none;
+   text-align: center;
    
     margin: 0;
-    width: 16%;
+    width: 20%;
   }
   .container {
     max-width: 100% ;
+    margin: 0%;
+    padding: 0%;
   }
   #header {
-    background-color: #E6BFE0;
+    background-color: #e0d9df;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -89,7 +91,7 @@ input{
   }
 #updateproduct{
  float: left;
- width: 30%;
+ width: 37%;
 }
 #updateuser{
   float: left;
@@ -113,4 +115,10 @@ table{
 #orderitem{
   display: inline-block;
   width: 30%;
+}
+#loginform{
+width: 50%;
+margin-left: auto;
+margin-right: auto;
+margin-top: 10%;
 }
