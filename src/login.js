@@ -1,12 +1,20 @@
 import "./index.css";
 import React, { useEffect, useState } from "react";
 import { Formik, Field,  ErrorMessage } from 'formik';
-import { Route, Redirect } from 'react-router'
+import {
+  Route,
+  NavLink,
+  HashRouter,
+  Redirect ,
+  BrowserRouter,
+  Router,
+  Link
+} from "react-router-dom";
 import * as Yup from 'yup';
 import Button from '@material-ui/core/Button';
 import {   Form } from "react-bootstrap";
 //import Redirect from 'react-router'
-//import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
+//import { fetchlogin, fetchregister,fetchaccountexists ,fetchadminisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
 
 
@@ -60,6 +68,7 @@ const Login = props=> {
               .required('Password is required')
       })}
       render={({ errors, touched }) => (
+        <body>
           <Form onSubmit={handleSubmit} id="loginform">
               <div className="form-group">
                   <label htmlFor="username">username</label>
@@ -74,10 +83,12 @@ const Login = props=> {
               <div className="form-group">
               <Button type="submit" variant="contained" color="primary"
             style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>login</Button>
-              
               </div>
           </Form>
+         
+      </body>
       )}
+      
     />  );
       
 }

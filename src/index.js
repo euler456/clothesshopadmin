@@ -11,7 +11,7 @@ import Order from "./order";
 import Ordercontent from "./Ordercontent";
 import Login from './Login';
 //import Redirect from 'react-router'
-//import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
+//import { fetchlogin, fetchregister,fetchaccountexists ,fetchadminisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
 import {
   Route,
@@ -32,8 +32,13 @@ class Loginin extends React.Component {
    islogin:false
  };
  this.Logout = this.Logout.bind(this);
+ this.Signupredirect = this.Signupredirect.bind(this);
 } 
-  
+  Signupredirect=()=>{
+    this.setState({ redirect: true });
+    console.log('ddd');
+   
+  }
 Logout=()=>{
   fetch('http://localhost/clothesshop/api/api.php?action=adminlogout', 
   {
@@ -58,7 +63,7 @@ Logout=()=>{
   .catch(function(error) {console.log(error)});
 }
 componentDidMount() {
-  fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
+  fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
   {
           method: 'POST',
           credentials: 'include'
@@ -80,6 +85,7 @@ componentDidMount() {
   }
  render() {
    const { islogin } = this.state; 
+   const { redirect } = this.state; 
    if(islogin){
     return (
       <HashRouter>
@@ -96,12 +102,30 @@ componentDidMount() {
            <Route exact path="/Userpage" component={Userpage}/>
            <Route path="/order" component={order}/>
            <Route path="/ordercontent" component={ordercontent}/>
-           <Route path="/Sign" component={Sign}/>
+          
         </div>
         </div>
         </HashRouter>  );
- }else{
- return <Login/>
+ }
+ else if(redirect){
+   return(
+     <HashRouter>
+    <Route path="/Sign" component={Sign}/>
+    <Redirect to='/Sign'/>
+    </HashRouter>
+   
+   )
+ }
+ else{
+ return ( 
+   <body>
+  <Login/>
+ <div>
+  <Button  variant="contained" color="primary"
+  style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }} onClick={this.Signupredirect}>Sign up</Button>
+  </div>
+  </body>
+  )
 }
 }
 
@@ -119,7 +143,7 @@ class Home extends React.Component {
 }
  
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
+    fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
     {
             method: 'POST',
             credentials: 'include'
@@ -197,6 +221,7 @@ class Sign extends React.Component {
       return <Redirect to='/' />
     }
     return (
+      <body>
       <div>
          <h1>Sign Up</h1>
          <form  onSubmit={this.handleSubmit}>
@@ -210,7 +235,6 @@ class Sign extends React.Component {
               <TextField type="text" name="phone"  id="regphone"  variant="filled" min="4000000000" max="4999999999"
         color="primary" label="phone"
         style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
-            
               <TextField type="number" name="postcode"  id="regpostcode" variant="filled" min="0" max="9999"
         color="primary" label="postcode"
         style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
@@ -224,6 +248,7 @@ class Sign extends React.Component {
         style={{ marginTop: 10,marginRight: 300,display: 'inline-block' }}>Register</Button>
        </form>
       </div>
+      </body>
     );
   }
 }
@@ -271,7 +296,7 @@ class Sign extends React.Component {
   .catch(function(error) {console.log(error)});
   }
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
+    fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
     {
             method: 'POST',
             credentials: 'include'
@@ -358,7 +383,7 @@ class Userpage extends React.Component {
   }
   
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
+    fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
     {
             method: 'POST',
             credentials: 'include'
@@ -401,7 +426,7 @@ class order extends React.Component {
   }
   
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
+    fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
     {
             method: 'POST',
             credentials: 'include'
@@ -443,7 +468,7 @@ class ordercontent extends React.Component {
   }
   
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=isloggedin',
+    fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
     {
             method: 'POST',
             credentials: 'include'
