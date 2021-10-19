@@ -10,6 +10,7 @@ import User from "./user";
 import Order from "./order";
 import Ordercontent from "./Ordercontent";
 import Login from './Login';
+import Signup from './Signup';
 //import Redirect from 'react-router'
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchadminisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
@@ -175,82 +176,11 @@ class Home extends React.Component {
 }
 
 class Sign extends React.Component {
-  constructor() {
-    super();
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {
-      value: '',
-      redirect: false
-    };
-    
-  }
-  onChange(evt) {
-    this.setState({
-      value: evt.target.value.replace(/[^a-zA-Z]/g, '')
-    });
- };
-  handleSubmit(event) {
-    event.preventDefault();
-    const data = new FormData(event.target);
-    fetch('http://localhost/clothesshop/api/api.php?action=registeradmin', {
-      method: 'POST',
-      credentials: 'include',
-      body: data
-      
-    })   .then((headers) =>{
-      if(headers.status == 418) {
-          console.log('user exists');
-          //this.setState({ redirectToReferrer: false});
-          alert("username exists");
-          return;
-      }
-   
-      if(headers.status == 201) {
-          console.log('registration updated');
-          this.setState({ redirect: true });
-          return;
-      }
-     
-  })
-  .catch(function(error) {console.log(error)});
-  }
   render() {
-    const { redirect } = this.state;
-   // const { redirectToReferrer } = this.state;
-    if (redirect) {
-      return <Redirect to='/' />
-    }
-    return (
-      <body>
-      <div>
-         <h1>Sign Up</h1>
-         <form  onSubmit={this.handleSubmit}>
-             <TextField type="text" name="username" onChange={this.onChange.bind(this)} value={this.state.value} id="regusername" variant="filled"
-        color="primary"   label="username" maxlength="30" 
-        style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
-              <TextField type="email" name="email"  id="regemail"   variant="filled" 
-        color="primary"  label="email"
-        style={{ margin: 10 ,display: 'inline-block' }}required></TextField>
+  
+    return (<Signup/>);
  
-              <TextField type="text" name="phone"  id="regphone"  variant="filled" min="4000000000" max="4999999999"
-        color="primary" label="phone"
-        style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
-              <TextField type="number" name="postcode"  id="regpostcode" variant="filled" min="0" max="9999"
-        color="primary" label="postcode"
-        style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
-              <TextField type="password" name="password" placeholder="password" id="regpassword"  variant="filled"
-        color="primary" label="password"
-        style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
-              <TextField type="password" name="password2" placeholder="password again" id="regpassword2"  variant="filled"
-        color="primary" label="confirm password"
-        style={{ margin: 10 ,display: 'inline-block' }} required></TextField>
-              <Button type="submit" variant="contained" color="primary"
-        style={{ marginTop: 10,marginRight: 300,display: 'inline-block' }}>Register</Button>
-       </form>
-      </div>
-      </body>
-    );
-  }
+}
 }
 
 /*class Setting extends React.Component {
