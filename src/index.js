@@ -177,10 +177,8 @@ class Home extends React.Component {
 
 class Sign extends React.Component {
   render() {
-  
     return (<Signup/>);
- 
-}
+  }
 }
 
 /*class Setting extends React.Component {

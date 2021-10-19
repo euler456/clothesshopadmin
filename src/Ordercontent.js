@@ -84,8 +84,10 @@ function Ordercontent () {
           $(document).on('click', '.delete', function(event) {
         
             var orderitem_ID = $(this).closest('.itemform').find('.orderitem_ID').html();
+            var orderID = $(this).closest('.itemform').find('.orderID').html();
             var fd = new FormData();
             fd.append('orderitem_ID',orderitem_ID );
+            fd.append('orderID',orderID );
             fetch('http://localhost/clothesshop/api/api.php?action=orderdelete', 
             {
                 method: 'POST',
@@ -191,7 +193,7 @@ function Ordercontent () {
             <td >{hit.productname}</td>
             <td >{hit.price}</td>
             <td>{hit.size}</td>
-            <td>{hit.orderID}</td>
+            <td class="orderID">{hit.orderID}</td>
             <td><Button variant="contained" color="primary"
         style={{ display: 'inline-block' }} class="delete"   name="delete" value="delete" >Delete</Button></td>
         
