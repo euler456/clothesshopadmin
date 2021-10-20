@@ -19,7 +19,8 @@ import CloseIcon from '@material-ui/icons/Close';
 function Signup () {
     const [open, setOpen] = useState(false);
     const [pddelete, setDelete] = useState(false);
-    const [add, setAdd] = useState(false);
+    const [add, setAdd] = useState(false); 
+    const [ueex, setUeex] = useState(false);
 
       function handleSubmit(event) {
         event.preventDefault();
@@ -32,16 +33,19 @@ function Signup () {
         })   .then((headers) =>{
           if(headers.status == 403) {
               console.log('register failed');
+              localStorage.setItem('rgfl', '0');
               return;
           }
           if(headers.status == 201) {
               console.log('register successful');
-              localStorage.setItem('adpd', '0');
+              localStorage.setItem('rgsc', '0');
               window.location.reload();
               return;
           }
           if(headers.status == 418) {
             console.log('username exist');
+            localStorage.setItem('ueex', '0');
+            window.location.reload();
             return;
         }
       })
@@ -50,24 +54,23 @@ function Signup () {
    
  
          useEffect(() => {
-          let upop=localStorage.getItem('upop');
-          if(upop){
-          setOpen(true);
-          localStorage.removeItem("upop");
-          }
-          let deop=localStorage.getItem('deop');
-          if(deop){
+          let rgfl=localStorage.getItem('rgfl');
+          if(rgfl){
             setDelete(true);
-          localStorage.removeItem("deop");
+          localStorage.removeItem("rgfl");
           }
-          let adpd=localStorage.getItem('adpd');
-          if(adpd){
+          let rgsc=localStorage.getItem('rgsc');
+          if(rgsc){
             setAdd(true);
-          localStorage.removeItem("adpd");
+          localStorage.removeItem("rgsc");
           }
-          
+          let ueex=localStorage.getItem('ueex');
+          if(ueex){
+            setUeex(true);
+          localStorage.removeItem("ueex");
+          }
      
-          },[]);
+          });
           return (
             <body>
             <Box sx={{ width: '100%' }}>
@@ -87,7 +90,26 @@ function Signup () {
                 }
                 sx={{ mb: 2 }}
               >
-               Update successfull
+              Register failed
+              </Alert>
+            </Collapse>
+            <Collapse in={ueex}>
+              <Alert severity="warning"
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setUeex(false);
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                sx={{ mb: 2 }}
+              >
+              Register failed
               </Alert>
             </Collapse>
             <Collapse in={add}>
@@ -106,7 +128,7 @@ function Signup () {
                 }
                 sx={{ mb: 2 }}
               >
-               added successfull
+               Register successfull
               </Alert>
             </Collapse>
          
@@ -153,7 +175,7 @@ function Signup () {
   })}
   render={({ errors, touched }) => (
       <Form onSubmit={handleSubmit} id="updateuser">
-          <h2>Add user</h2>
+          <h2>Admin Register</h2>
           <div className="form-group">
               <label htmlFor="">username</label>
               <Field name="username" id="username" type="text" min="0" className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
@@ -167,7 +189,7 @@ function Signup () {
          
           <div className="form-group">
           <Button type="submit" variant="contained" color="primary" 
-        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Register</Button>
+        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>Register</Button>   
           </div>
       </Form>
   )}

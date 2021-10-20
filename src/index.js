@@ -64,6 +64,12 @@ Logout=()=>{
   .catch(function(error) {console.log(error)});
 }
 componentDidMount() {
+  let rgfl=localStorage.getItem('rgfl');
+  let rgsc=localStorage.getItem('rgsc');
+  let ueex=localStorage.getItem('ueex');
+  if(rgsc || ueex || rgfl){
+    this.setState({ redirect: true });
+  }
   fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
   {
           method: 'POST',
@@ -176,8 +182,18 @@ class Home extends React.Component {
 }
 
 class Sign extends React.Component {
+  Loginredirect=()=>{
+    window.location.reload();   
+  }
   render() {
-    return (<Signup/>);
+  
+    return (
+      <body>
+    <Signup/>
+    <Button type="submit" variant="contained" color="primary" 
+        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }} onClick={this.Loginredirect}>Back</Button>    
+    </body>
+      );
   }
 }
 
