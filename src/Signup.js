@@ -75,7 +75,7 @@ function Signup () {
             <body>
             <Box sx={{ width: '100%' }}>
             <Collapse in={open}>
-              <Alert
+              <Alert severity="warning"
                 action={
                   <IconButton
                     aria-label="close"
@@ -109,7 +109,7 @@ function Signup () {
                 }
                 sx={{ mb: 2 }}
               >
-              Register failed
+              Username already exist
               </Alert>
             </Collapse>
             <Collapse in={add}>

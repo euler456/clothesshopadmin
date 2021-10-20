@@ -88,7 +88,7 @@ function Ordercontent () {
             var fd = new FormData();
             fd.append('orderitem_ID',orderitem_ID );
             fd.append('orderID',orderID );
-            fetch('http://localhost/clothesshop/api/api.php?action=orderdelete', 
+            fetch('http://localhost/clothesshop/api/api.php?action=adminorderdelete', 
             {
                 method: 'POST',
                 body: fd,
