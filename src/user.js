@@ -31,7 +31,7 @@ function User () {
      function handleUpdate(event){
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/clothesshop/api/api.php?action=updateuser', {
+        fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=updateuser', {
           method: 'POST',
           credentials: 'include',
           body: data
@@ -56,7 +56,7 @@ function User () {
       function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/clothesshop/api/api.php?action=adminadduser', {
+        fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminadduser', {
           method: 'POST',
           credentials: 'include',
           body: data
@@ -85,7 +85,7 @@ function User () {
         var CustomerID = $(this).closest('.userform').find('.userid').html();
         var dd = new FormData();
         dd.append('CustomerID',CustomerID );
-        fetch('http://localhost/clothesshop/api/api.php?action=displaysingleuser',
+        fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=displaysingleuser',
         {
           method: 'POST',
           body: dd,
@@ -125,7 +125,7 @@ function User () {
           if(uplocal){
             var dd = new FormData();
           dd.append('CustomerID',uplocal );
-          fetch('http://localhost/clothesshop/api/api.php?action=displaysingleuser',
+          fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=displaysingleuser',
           {
             method: 'POST',
             body: dd,
@@ -136,7 +136,7 @@ function User () {
               .catch(function(error) {console.log(error)});
           }
         
-            fetch('http://localhost/clothesshop/api/api.php?action=displayuser',
+            fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=displayuser',
             {
                     method: 'POST',
                     credentials: 'include'

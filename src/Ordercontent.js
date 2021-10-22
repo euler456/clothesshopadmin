@@ -34,7 +34,7 @@ function Ordercontent () {
       function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/clothesshop/api/api.php?action=addorderitem', {
+        fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=addorderitem', {
           method: 'POST',
           credentials: 'include',
           body: data
@@ -73,7 +73,7 @@ function Ordercontent () {
             setAdd(true);
           localStorage.removeItem("adpd");
           }
-            fetch('http://localhost/clothesshop/api/api.php?action=displayordercontent',
+            fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=displayordercontent',
             {
                     method: 'POST',
                     credentials: 'include'
@@ -88,7 +88,7 @@ function Ordercontent () {
             var fd = new FormData();
             fd.append('orderitem_ID',orderitem_ID );
             fd.append('orderID',orderID );
-            fetch('http://localhost/clothesshop/api/api.php?action=adminorderdelete', 
+            fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminorderdelete', 
             {
                 method: 'POST',
                 body: fd,

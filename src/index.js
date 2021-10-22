@@ -41,7 +41,7 @@ class Loginin extends React.Component {
    
   }
 Logout=()=>{
-  fetch('http://localhost/clothesshop/api/api.php?action=adminlogout', 
+  fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminlogout', 
   {
       method: 'GET',
       credentials: 'include'
@@ -70,7 +70,7 @@ componentDidMount() {
   if(rgsc || ueex || rgfl){
     this.setState({ redirect: true });
   }
-  fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
+  fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminisloggedin',
   {
           method: 'POST',
           credentials: 'include'
@@ -150,7 +150,7 @@ class Home extends React.Component {
 }
  
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
+    fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminisloggedin',
     {
             method: 'POST',
             credentials: 'include'
@@ -217,7 +217,7 @@ class Sign extends React.Component {
     event.preventDefault();
     const data = new FormData(event.target);
     this.props.history.push('/');
-    fetch('http://localhost/clothesshop/api/api.php?action=adminupdate', {
+    fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminupdate', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -240,7 +240,7 @@ class Sign extends React.Component {
   .catch(function(error) {console.log(error)});
   }
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
+    fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminisloggedin',
     {
             method: 'POST',
             credentials: 'include'
@@ -327,7 +327,7 @@ class Userpage extends React.Component {
   }
   
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
+    fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminisloggedin',
     {
             method: 'POST',
             credentials: 'include'
@@ -370,7 +370,7 @@ class order extends React.Component {
   }
   
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
+    fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminisloggedin',
     {
             method: 'POST',
             credentials: 'include'
@@ -412,7 +412,7 @@ class ordercontent extends React.Component {
   }
   
   componentDidMount() {
-    fetch('http://localhost/clothesshop/api/api.php?action=adminisloggedin',
+    fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminisloggedin',
     {
             method: 'POST',
             credentials: 'include'

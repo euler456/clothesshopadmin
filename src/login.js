@@ -22,7 +22,7 @@ const Login = props=> {
     function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/clothesshop/api/api.php?action=adminlogin', {
+        fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=adminlogin', {
           method: 'POST',
           credentials: 'include',
           body: data

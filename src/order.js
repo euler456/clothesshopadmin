@@ -27,7 +27,7 @@ function Order () {
     function handleUpdate(event){
       event.preventDefault();
       const data = new FormData(event.target);
-      fetch('http://localhost/clothesshop/api/api.php?action=updateorder', {
+      fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=updateorder', {
         method: 'POST',
         credentials: 'include',
         body: data
@@ -52,7 +52,7 @@ window.location.reload();
       function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/clothesshop/api/api.php?action=addorder', {
+        fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=addorder', {
           method: 'POST',
           credentials: 'include',
           body: data
@@ -78,7 +78,7 @@ window.location.reload();
         var orderID = $(this).closest('.orderform').find('.orderID').html();
         var dd = new FormData();
         dd.append('orderID',orderID );
-        fetch('http://localhost/clothesshop/api/api.php?action=displaysingleorder',
+        fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=displaysingleorder',
         {
           method: 'POST',
           body: dd,
@@ -121,7 +121,7 @@ window.location.reload();
           if(uplocal){
             var dd = new FormData();
           dd.append('orderID',uplocal );
-          fetch('http://localhost/clothesshop/api/api.php?action=displaysingleorder',
+          fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=displaysingleorder',
           {
             method: 'POST',
             body: dd,
@@ -132,7 +132,7 @@ window.location.reload();
               .catch(function(error) {console.log(error)});
           }
         
-            fetch('http://localhost/clothesshop/api/api.php?action=displayorder',
+            fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=displayorder',
             {
                     method: 'POST',
                     credentials: 'include'
@@ -145,7 +145,7 @@ window.location.reload();
             var orderID = $(this).closest('.orderform').find('.orderID').html();
             var fd = new FormData();
             fd.append('orderID',orderID );
-            fetch('http://localhost/clothesshop/api/api.php?action=deleteOrder', 
+            fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=deleteOrder', 
             {
                 method: 'POST',
                 body: fd,

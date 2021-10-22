@@ -26,7 +26,7 @@ function Product () {
         event.preventDefault();
        
         const data = new FormData(event.target);
-        fetch('http://localhost/clothesshop/api/api.php?action=updateproduct', {
+        fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=updateproduct', {
           method: 'POST',
           credentials: 'include',
           body: data
@@ -53,7 +53,7 @@ function Product () {
         var productID = $(this).closest('.chartcontainer').find('.pdID').html();
         var dd = new FormData();
         dd.append('productID',productID );
-        fetch('http://localhost/clothesshop/api/api.php?action=displaysingleproduct',
+        fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=displaysingleproduct',
         {
           method: 'POST',
           body: dd,
@@ -79,7 +79,7 @@ function Product () {
       function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/clothesshop/api/api.php?action=addproduct', {
+        fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=addproduct', {
           method: 'POST',
           credentials: 'include',
           body: data
@@ -121,7 +121,7 @@ function Product () {
           if(uplocal){
             var dd = new FormData();
           dd.append('productID',uplocal );
-          fetch('http://localhost/clothesshop/api/api.php?action=displaysingleproduct',
+          fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=displaysingleproduct',
           {
             method: 'POST',
             body: dd,
@@ -131,7 +131,7 @@ function Product () {
               .then(data =>setUppdata(data))
               .catch(function(error) {console.log(error)});
           }
-            fetch('http://localhost/clothesshop/api/api.php?action=displayproduct',
+            fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=displayproduct',
             {
                     method: 'POST',
                     credentials: 'include'
@@ -144,7 +144,7 @@ function Product () {
             var productID = $(this).closest('.chartcontainer').find('.pdID').html();
             var fd = new FormData();
             fd.append('productID',productID );
-            fetch('http://localhost/clothesshop/api/api.php?action=deleteProduct', 
+            fetch('https://clotheshopproj2.herokuapp.com/api/api.php?action=deleteProduct', 
             {
                 method: 'POST',
                 body: fd,
