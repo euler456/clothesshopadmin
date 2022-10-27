@@ -383,22 +383,20 @@ window.location.reload();
              className={'form-control' + (errors.orderstatus && touched.orderstatus ? ' is-invalid' : '')}  />
              <ErrorMessage name="orderstatus" component="div" className="invalid-feedback" />
           </div>
-             <div className="form-group">
+          <div className="form-group">
              <label htmlFor="">CustomerID</label>
               <Field name="CustomerID" class="updateinput" id="CustomerID" type="number" min="0"   className={'form-control' + (errors.CustomerID && touched.CustomerID ? ' is-invalid' : '')} />
               <ErrorMessage name="CustomerID" component="div" className="invalid-feedback" />
-              </div>
-              <div className="form-group">
-             
+          </div>
+          <div className="form-group">
               <label htmlFor="totalprice">totalprice</label>
               <Field name="totalprice" id="totalprice" class="updateinput"type="text"  className={'form-control' + (errors.totalprice && touched.totalprice ? ' is-invalid' : '')} />
               <ErrorMessage name="types" component="div" className="invalid-feedback" />
-              </div>
-         
-          <div className="form-group">
-          <Button type="submit" variant="contained" color="primary" 
-        style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>add order</Button>
           </div>
+         
+        <div className="form-group">
+          <Button type="submit" variant="contained" color="primary" style={{ marginTop: 10,marginRight: 10,display: 'inline-block' }}>add order</Button>
+        </div>
       </Form>
   )}
 />

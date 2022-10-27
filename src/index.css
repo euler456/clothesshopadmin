@@ -27,10 +27,13 @@ input{
   padding-bottom: 20px;
 }
  form{
+  
   padding: 30px;
   margin: 10px;
   
  }
+ 
+ 
  #header li {
     display: inline;
    text-align: center;
@@ -90,7 +93,7 @@ input{
  
   }
 #updateproduct{
- float: left;
+
  width: 37%;
 }
 #updateuser{
