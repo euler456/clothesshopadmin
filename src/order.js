@@ -314,11 +314,11 @@ window.location.reload();
           <div className="form-group">
           {uppdata.map(uppdat =>(
                 <div>
-                
+                <div>
                <label htmlFor="">orderID</label>
               <input name="orderID" class="updateinput" id="orderID" type="number" min="0" defaultValue={uppdat.orderID}   className={'form-control' + (errors.orderID && touched.orderID ? ' is-invalid' : '')} ></input>
               <ErrorMessage name="orderID" component="div" className="invalid-feedback" />
-              
+              </div>
              <label htmlFor="orderstatus">orderstatus</label>
              <input name="orderstatus"class="updateinput" id="orderstatus"   type="text" defaultValue={uppdat.orderstatus} 
              className={'form-control' + (errors.orderstatus && touched.orderstatus ? ' is-invalid' : '')}  />
@@ -377,13 +377,12 @@ window.location.reload();
   render={({ errors, touched }) => (
       <Form onSubmit={handleSubmit} id="order">
           <h2>Add order</h2>
-     
-              <div className="form-group">
+          <div className="form-group">
              <label htmlFor="orderstatus">orderstatus</label>
              <Field name="orderstatus"class="updateinput" id="orderstatus"   type="text" 
              className={'form-control' + (errors.orderstatus && touched.orderstatus ? ' is-invalid' : '')}  />
              <ErrorMessage name="orderstatus" component="div" className="invalid-feedback" />
-             </div>
+          </div>
              <div className="form-group">
              <label htmlFor="">CustomerID</label>
               <Field name="CustomerID" class="updateinput" id="CustomerID" type="number" min="0"   className={'form-control' + (errors.CustomerID && touched.CustomerID ? ' is-invalid' : '')} />
